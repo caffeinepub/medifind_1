@@ -1,0 +1,95 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 5,
+  "summary": "A health app that lists diseases and their associated medicines, with GPS functionality to show the nearest pharmacy to the user.",
+  "architectural_notes": [
+    "Uses device GPS/geolocation API to find and display nearest pharmacies",
+    "Disease-medicine database must be comprehensive and searchable",
+    "PWA 'Add to Home Screen' prompt implemented using the beforeinstallprompt event for Android/Chrome support"
+  ],
+  "known_issues": [],
+  "isFixRequest": false,
+  "imageRequirements": "## Required Images\n- App icon for PWA manifest, flat soft green medical cross or leaf on white background (medifind-icon.dim_192x192.png)\n- App icon for PWA manifest large size, flat soft green medical cross or leaf on white background (medifind-icon.dim_512x512.png)",
+  "existing_features": [
+    {
+      "id": "feature-build-a-disease-directory-page-that-lists-all-diseases-fetched-from-the-backend-each-disease-entry-is-clickable-and-expands-or-navigates-to-a-detail-view-showing-the-disease-description-and-its-associated-medicines",
+      "title": "Build a Disease Directory page that lists all diseases fetched from the backend. Each disease entry is clickable and expands or navigates to a detail view showing the disease description and its associated medicines.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-nearest-pharmacy-finder-feature-on-the-frontend-that-uses-the-browser-s-geolocation-api-to-obtain-the-user-s-current-coordinates-and-then-displays-a-static-map-visual-using-a-placeholder-image-or-styled-card-showing-nearby-pharmacy-information-since-gps-and-live-map-apis-are-not-supported-simulate-nearest-pharmacy-results-with-a-set-of-hard-coded-sample-pharmacies-that-include-name-address-and-distance-then-sort-and-display-them-by-proximity-based-on-the-user-s-coordinates-using-the-haversine-formula",
+      "title": "Add a Nearest Pharmacy Finder feature on the frontend that uses the browser's Geolocation API to obtain the user's current coordinates and then displays a static map visual (using a placeholder image or styled card) showing nearby pharmacy information. Since GPS and live map APIs are not supported, simulate nearest pharmacy results with a set of hard-coded sample pharmacies that include name, address, and distance, then sort and display them by proximity based on the user's coordinates using the Haversine formula.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-design-and-apply-a-clean-modern-medical-health-visual-theme-across-the-entire-app-use-a-crisp-white-and-soft-green-color-palette-with-clear-sans-serif-typography-card-based-layouts-and-subtle-iconography-the-navigation-should-include-tabs-or-a-sidebar-for-switching-between-the-disease-directory-and-the-nearest-pharmacy-finder",
+      "title": "Design and apply a clean, modern medical/health visual theme across the entire app. Use a crisp white and soft green color palette with clear sans-serif typography, card-based layouts, and subtle iconography. The navigation should include tabs or a sidebar for switching between the Disease Directory and the Nearest Pharmacy Finder.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-web-app-manifest-file-manifest-json-in-the-frontend-public-directory-with-the-app-name-medifind-short-name-theme-color-matching-the-existing-soft-green-palette-background-color-display-mode-set-to-standalone-and-appropriate-icon-references-so-the-browser-recognizes-the-app-as-installable",
+      "title": "Add a Web App Manifest file (manifest.json) in the frontend/public directory with the app name 'MediFind', short name, theme color matching the existing soft green palette, background color, display mode set to 'standalone', and appropriate icon references so the browser recognizes the app as installable.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-visible-add-to-home-screen-button-in-the-app-ui-e-g-in-the-layout-header-or-as-a-dismissible-banner-below-the-header-that-appears-only-when-the-browser-fires-the-beforeinstallprompt-event-when-clicked-it-should-trigger-the-native-browser-install-prompt-once-the-user-accepts-or-dismisses-hide-the-button-on-ios-safari-where-beforeinstallprompt-is-not-available-show-a-small-instructional-tooltip-or-banner-explaining-how-to-use-the-share-add-to-home-screen-option",
+      "title": "Add a visible 'Add to Home Screen' button in the app UI (e.g., in the Layout header or as a dismissible banner below the header) that appears only when the browser fires the 'beforeinstallprompt' event. When clicked, it should trigger the native browser install prompt. Once the user accepts or dismisses, hide the button. On iOS Safari (where beforeinstallprompt is not available), show a small instructional tooltip or banner explaining how to use the Share > Add to Home Screen option.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-register-a-minimal-service-worker-sw-js-in-frontend-public-that-caches-the-app-shell-on-install-so-the-pwa-passes-basic-installability-requirements-in-modern-browsers-chrome-edge-the-service-worker-should-at-minimum-handle-the-install-event-and-cache-the-root-url",
+      "title": "Register a minimal service worker (sw.js) in frontend/public that caches the app shell on install so the PWA passes basic installability requirements in modern browsers (Chrome, Edge). The service worker should at minimum handle the install event and cache the root URL.",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "List of diseases with their associated medicines",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "GPS-based nearest pharmacy finder",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Create a backend data store in the Motoko actor that holds a list of diseases, each with a name, description, and an array of associated medicines (medicine name + dosage notes). Provide query functions to list all diseases and to get details for a specific disease.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Add an 'Add to Home Screen' button/prompt so users can install the web app on their phone like a native app",
+      "reqIds": [],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "MediFind",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

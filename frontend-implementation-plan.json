@@ -1,0 +1,88 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Add 'Add to Home Screen' button for PWA installation",
+  "requirements": [
+    {
+      "id": "REQ-5",
+      "summary": "Add Web App Manifest file with MediFind branding and soft green theme to enable PWA installability",
+      "acceptanceCriteria": [
+        "A manifest.json file exists in frontend/public with name, short_name, theme_color, background_color, display: standalone, and icons fields",
+        "The manifest is linked in frontend/index.html via a <link rel=\"manifest\"> tag",
+        "The app theme-color meta tag is set to match the soft green palette"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/public/manifest.json",
+          "operation": "create",
+          "description": "Create Web App Manifest with name 'MediFind', short_name 'MediFind', theme_color matching the soft green palette (#10b981 or equivalent from the OKLCH color scheme), background_color '#ffffff', display 'standalone', start_url '/', scope '/', and icons array referencing the generated PWA icons at frontend/public/assets/generated/medifind-icon.dim_192x192.png and frontend/public/assets/generated/medifind-icon.dim_512x512.png with appropriate sizes and types."
+        },
+        {
+          "path": "frontend/public/assets/generated/medifind-icon.dim_192x192.png",
+          "operation": "create",
+          "description": "Wire the generated 192x192 PWA icon (flat soft green medical cross or leaf on white background) into the manifest as a static asset for standard icon size."
+        },
+        {
+          "path": "frontend/public/assets/generated/medifind-icon.dim_512x512.png",
+          "operation": "create",
+          "description": "Wire the generated 512x512 PWA icon (flat soft green medical cross or leaf on white background) into the manifest as a static asset for high-resolution displays."
+        },
+        {
+          "path": "frontend/index.html",
+          "operation": "modify",
+          "description": "Add <link rel=\"manifest\" href=\"/manifest.json\"> in the <head> section to link the manifest file. Add or update the theme-color meta tag to match the soft green palette (e.g., <meta name=\"theme-color\" content=\"#10b981\">). Ensure the title remains 'MediFind'."
+        }
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "summary": "Add visible 'Add to Home Screen' button that triggers native install prompt on supported browsers and shows iOS fallback instructions",
+      "acceptanceCriteria": [
+        "An 'Add to Home Screen' button or banner is rendered in the UI when the browser supports the install prompt",
+        "Clicking the button triggers the native browser PWA install prompt",
+        "The button/banner is hidden after the prompt is accepted or dismissed",
+        "On iOS Safari, a fallback instructional message is shown instead (e.g., 'Tap the Share icon then Add to Home Screen')",
+        "The button/banner uses the existing soft green color palette and matches the app's visual theme"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useInstallPrompt.ts",
+          "operation": "create",
+          "description": "Create a custom hook that listens for the 'beforeinstallprompt' event, stores the event object in state, provides a function to trigger the prompt, and detects iOS Safari to return an isIOS flag. Return { deferredPrompt, promptInstall, isInstalled, isIOS } where promptInstall calls prompt() on the deferred event and hides the UI after user choice."
+        },
+        {
+          "path": "frontend/src/components/InstallPrompt.tsx",
+          "operation": "create",
+          "description": "Create a component that uses the useInstallPrompt hook to render a dismissible banner or button. On non-iOS browsers with beforeinstallprompt support, show a button with soft green styling that calls promptInstall on click. On iOS, show a small instructional banner with text like 'Tap the Share icon, then Add to Home Screen' with an appropriate icon. Include a dismiss button that hides the prompt. Use Tailwind classes matching the existing soft green theme."
+        },
+        {
+          "path": "frontend/src/components/Layout.tsx",
+          "operation": "modify",
+          "description": "Import and render the InstallPrompt component below the header (inside the Layout component, after the header but before the main content slot) so it appears as a dismissible banner across all pages. Ensure the Layout remains visually consistent with the existing sticky header and footer structure."
+        }
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "summary": "Register a minimal service worker to cache the app shell and meet PWA installability requirements",
+      "acceptanceCriteria": [
+        "A sw.js service worker file exists in frontend/public",
+        "The service worker is registered in frontend/src/main.tsx or frontend/index.html",
+        "The app passes Chrome's PWA installability criteria (manifest + service worker)",
+        "The service worker does not break existing app functionality"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/public/sw.js",
+          "operation": "create",
+          "description": "Create a minimal service worker that handles the 'install' event by opening a cache (e.g., 'medifind-v1') and caching the root URL ('/') and the main HTML file. Handle the 'activate' event to clean up old caches. Use a simple fetch strategy that attempts network first and falls back to cache for basic offline support without aggressive caching."
+        },
+        {
+          "path": "frontend/index.html",
+          "operation": "modify",
+          "description": "Add a <script> block in the <head> or at the end of <body> that registers the service worker at /sw.js using navigator.serviceWorker.register('/sw.js') wrapped in a feature detection check (if ('serviceWorker' in navigator)). Handle registration success and error silently or log to console. This avoids modifying main.tsx per the constraint."
+        }
+      ]
+    }
+  ]
+}

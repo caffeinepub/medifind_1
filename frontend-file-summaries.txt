@@ -1,0 +1,20 @@
+{
+  "frontend/src/index.css": "Global styles with a medical green OKLCH color theme, Inter/Plus Jakarta Sans fonts, and utility classes for gradients, card hover effects, and medicine badges.",
+  "frontend/tailwind.config.js": "Extended Tailwind config with custom display/sans font families, additional border radius sizes, card shadow variants, and a fade-in animation.",
+  "frontend/src/hooks/useQueries.ts": "React Query hooks for fetching all diseases, a single disease by name, and an initialize mutation that seeds the backend with sample data.",
+  "frontend/src/utils/haversine.ts": "Haversine formula implementation to calculate distance in kilometers between two coordinate pairs, plus a formatDistance helper.",
+  "frontend/src/data/pharmacies.ts": "Static array of 12 sample pharmacy objects with name, address, coordinates, phone, and hours for proximity simulation.",
+  "frontend/src/hooks/useGeolocation.ts": "React hook wrapping the browser Geolocation API with loading/error states, permission denial handling, and reset functionality.",
+  "frontend/src/components/Layout.tsx": "App shell with sticky header navigation, InstallPrompt banner below the header, main content slot, and footer with caffeine.ai attribution.",
+  "frontend/src/components/DiseaseCard.tsx": "Compact card component displaying a disease name, truncated description, medicine count badge, and selection highlight state.",
+  "frontend/src/components/DiseaseDetail.tsx": "Detailed panel showing full disease description, numbered medicine list with dosage notes, and a medical disclaimer notice.",
+  "frontend/src/components/PharmacyCard.tsx": "Card displaying a pharmacy's rank, name, address, phone, hours, and calculated distance with a \"Nearest\" badge for the top result.",
+  "frontend/src/pages/DiseaseDirectory.tsx": "Full disease directory page with search filtering, auto-initialization, loading skeletons, and a sticky detail panel for selected diseases.",
+  "frontend/src/pages/PharmacyFinder.tsx": "Pharmacy finder page with hero banner, GPS location button, sorted pharmacy results using Haversine distances, and an informative empty state.",
+  "frontend/src/App.tsx": "Root app component managing page state between Disease Directory and Pharmacy Finder, wrapped in the Layout shell.",
+  "frontend/index.html": "HTML entry point with manifest link, theme-color meta tag, Apple PWA meta tags, and inline service worker registration script.",
+  "frontend/public/manifest.json": "Web App Manifest for MediFind PWA with name, icons, theme color, standalone display mode, and start URL.",
+  "frontend/public/sw.js": "Minimal service worker that caches the app shell on install, cleans old caches on activate, and uses a network-first with cache fallback fetch strategy.",
+  "frontend/src/hooks/useInstallPrompt.ts": "Custom React hook that captures the beforeinstallprompt event, detects iOS Safari, tracks install/dismissed state with localStorage persistence, and exposes promptInstall and dismiss functions.",
+  "frontend/src/components/InstallPrompt.tsx": "Dismissible banner component that shows a native install button on supported browsers or step-by-step iOS Share instructions, using the app's soft green theme."
+}

@@ -1,0 +1,129 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --radius: 0.75rem;
+
+    /* Medical Green Theme */
+    --background: 0.98 0.005 150;
+    --foreground: 0.18 0.02 200;
+
+    --card: 1 0 0;
+    --card-foreground: 0.18 0.02 200;
+
+    --popover: 1 0 0;
+    --popover-foreground: 0.18 0.02 200;
+
+    --primary: 0.52 0.15 162;
+    --primary-foreground: 0.99 0 0;
+
+    --secondary: 0.94 0.04 162;
+    --secondary-foreground: 0.35 0.1 162;
+
+    --muted: 0.95 0.01 150;
+    --muted-foreground: 0.52 0.03 200;
+
+    --accent: 0.90 0.07 162;
+    --accent-foreground: 0.30 0.12 162;
+
+    --destructive: 0.577 0.245 27.325;
+    --destructive-foreground: 0.985 0 0;
+
+    --border: 0.88 0.02 162;
+    --input: 0.88 0.02 162;
+    --ring: 0.52 0.15 162;
+
+    --chart-1: 0.52 0.15 162;
+    --chart-2: 0.60 0.12 200;
+    --chart-3: 0.70 0.10 120;
+    --chart-4: 0.65 0.18 80;
+    --chart-5: 0.55 0.20 30;
+
+    --sidebar: 0.97 0.01 162;
+    --sidebar-foreground: 0.18 0.02 200;
+    --sidebar-primary: 0.52 0.15 162;
+    --sidebar-primary-foreground: 0.99 0 0;
+    --sidebar-accent: 0.90 0.07 162;
+    --sidebar-accent-foreground: 0.30 0.12 162;
+    --sidebar-border: 0.88 0.02 162;
+    --sidebar-ring: 0.52 0.15 162;
+  }
+
+  .dark {
+    --background: 0.13 0.02 200;
+    --foreground: 0.95 0.01 150;
+
+    --card: 0.18 0.02 200;
+    --card-foreground: 0.95 0.01 150;
+
+    --popover: 0.20 0.02 200;
+    --popover-foreground: 0.95 0.01 150;
+
+    --primary: 0.60 0.16 162;
+    --primary-foreground: 0.10 0.02 200;
+
+    --secondary: 0.25 0.04 200;
+    --secondary-foreground: 0.85 0.05 162;
+
+    --muted: 0.22 0.02 200;
+    --muted-foreground: 0.60 0.04 200;
+
+    --accent: 0.28 0.06 162;
+    --accent-foreground: 0.85 0.08 162;
+
+    --destructive: 0.704 0.191 22.216;
+    --destructive-foreground: 0.985 0 0;
+
+    --border: 1 0 0 / 10%;
+    --input: 1 0 0 / 15%;
+    --ring: 0.60 0.16 162;
+
+    --chart-1: 0.60 0.16 162;
+    --chart-2: 0.65 0.14 200;
+    --chart-3: 0.70 0.12 120;
+    --chart-4: 0.65 0.18 80;
+    --chart-5: 0.55 0.20 30;
+
+    --sidebar: 0.18 0.02 200;
+    --sidebar-foreground: 0.95 0.01 150;
+    --sidebar-primary: 0.60 0.16 162;
+    --sidebar-primary-foreground: 0.10 0.02 200;
+    --sidebar-accent: 0.28 0.06 162;
+    --sidebar-accent-foreground: 0.85 0.08 162;
+    --sidebar-border: 1 0 0 / 10%;
+    --sidebar-ring: 0.60 0.16 162;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+  }
+}
+
+@layer utilities {
+  .gradient-hero {
+    background: linear-gradient(135deg, oklch(0.52 0.15 162) 0%, oklch(0.45 0.14 190) 100%);
+  }
+
+  .card-hover {
+    @apply transition-all duration-200 hover:shadow-md hover:-translate-y-0.5;
+  }
+
+  .medicine-badge {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium;
+    background: oklch(0.92 0.07 162);
+    color: oklch(0.32 0.12 162);
+  }
+}
