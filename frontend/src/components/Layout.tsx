@@ -1,18 +1,26 @@
 import { useState } from 'react';
-import { Activity, MapPin, Menu, X, Heart } from 'lucide-react';
+import { Activity, MapPin, Menu, X, Heart, Calculator } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { InstallPrompt } from '@/components/InstallPrompt';
 
+type Page = 'diseases' | 'pharmacy' | 'calculator';
+
 interface LayoutProps {
   children: React.ReactNode;
-  activePage: 'diseases' | 'pharmacy';
-  onNavigate: (page: 'diseases' | 'pharmacy') => void;
+  activePage: Page;
+  onNavigate: (page: Page) => void;
 }
 
 export function Layout({ children, activePage, onNavigate }: LayoutProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const year = new Date().getFullYear();
   const appId = encodeURIComponent(window.location.hostname || 'medifind-app');
+
+  const navItems: { page: Page; label: string; icon: React.ReactNode }[] = [
+    { page: 'diseases', label: 'Disease Directory', icon: <Activity className="w-4 h-4" /> },
+    { page: 'pharmacy', label: 'Find Pharmacy', icon: <MapPin className="w-4 h-4" /> },
+    { page: 'calculator', label: 'Calculator', icon: <Calculator className="w-4 h-4" /> },
+  ];
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -36,7 +44,8 @@ export function Layout({ children, activePage, onNavigate }: LayoutProps) {
                     const parent = target.parentElement;
                     if (parent) {
                       const icon = document.createElement('div');
-                      icon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>';
+                      icon.innerHTML =
+                        '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>';
                       parent.appendChild(icon.firstChild!);
                     }
                   }}
@@ -50,28 +59,20 @@ export function Layout({ children, activePage, onNavigate }: LayoutProps) {
 
             {/* Desktop Nav */}
             <nav className="hidden md:flex items-center gap-1">
-              <button
-                onClick={() => onNavigate('diseases')}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-150 ${
-                  activePage === 'diseases'
-                    ? 'bg-primary text-primary-foreground shadow-sm'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-accent'
-                }`}
-              >
-                <Activity className="w-4 h-4" />
-                Disease Directory
-              </button>
-              <button
-                onClick={() => onNavigate('pharmacy')}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-150 ${
-                  activePage === 'pharmacy'
-                    ? 'bg-primary text-primary-foreground shadow-sm'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-accent'
-                }`}
-              >
-                <MapPin className="w-4 h-4" />
-                Find Pharmacy
-              </button>
+              {navItems.map(({ page, label, icon }) => (
+                <button
+                  key={page}
+                  onClick={() => onNavigate(page)}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-150 ${
+                    activePage === page
+                      ? 'bg-primary text-primary-foreground shadow-sm'
+                      : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+                  }`}
+                >
+                  {icon}
+                  {label}
+                </button>
+              ))}
             </nav>
 
             {/* Mobile menu button */}
@@ -88,28 +89,23 @@ export function Layout({ children, activePage, onNavigate }: LayoutProps) {
           {/* Mobile Nav */}
           {mobileMenuOpen && (
             <div className="md:hidden border-t border-border py-3 space-y-1 animate-fade-in">
-              <button
-                onClick={() => { onNavigate('diseases'); setMobileMenuOpen(false); }}
-                className={`w-full flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${
-                  activePage === 'diseases'
-                    ? 'bg-primary text-primary-foreground'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-accent'
-                }`}
-              >
-                <Activity className="w-4 h-4" />
-                Disease Directory
-              </button>
-              <button
-                onClick={() => { onNavigate('pharmacy'); setMobileMenuOpen(false); }}
-                className={`w-full flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${
-                  activePage === 'pharmacy'
-                    ? 'bg-primary text-primary-foreground'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-accent'
-                }`}
-              >
-                <MapPin className="w-4 h-4" />
-                Find Pharmacy
-              </button>
+              {navItems.map(({ page, label, icon }) => (
+                <button
+                  key={page}
+                  onClick={() => {
+                    onNavigate(page);
+                    setMobileMenuOpen(false);
+                  }}
+                  className={`w-full flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${
+                    activePage === page
+                      ? 'bg-primary text-primary-foreground'
+                      : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+                  }`}
+                >
+                  {icon}
+                  {label}
+                </button>
+              ))}
             </div>
           )}
         </div>
@@ -119,9 +115,7 @@ export function Layout({ children, activePage, onNavigate }: LayoutProps) {
       <InstallPrompt />
 
       {/* Main Content */}
-      <main className="flex-1">
-        {children}
-      </main>
+      <main className="flex-1">{children}</main>
 
       {/* Footer */}
       <footer className="border-t border-border bg-card mt-auto">

@@ -1,60 +1,41 @@
 {
   "kind": "build_request",
-  "title": "Fix PWA 'Add to Home Screen' install prompt not working",
+  "title": "Add Calculator App",
   "projectName": "MediFind",
-  "priority": "high",
+  "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-8",
-      "text": "Audit and fix the PWA 'Add to Home Screen' install prompt flow. Ensure the `beforeinstallprompt` event is captured reliably before React renders (attach the listener in `index.html` or early in `main.tsx`), stored, and passed to the `useInstallPrompt` hook. Verify the manifest.json meets all Chrome installability criteria (start_url, display: standalone, icons with at least one 192×192 and one 512×512 PNG). Confirm the service worker (sw.js) is registered successfully and does not throw errors on activation. Fix any race conditions between service worker registration and the `beforeinstallprompt` event that may prevent the banner from appearing.",
+      "id": "REQ-10",
+      "text": "Add a Calculator page to the frontend with a fully functional standard calculator supporting addition, subtraction, multiplication, and division. The calculator should display a multi-digit input/result screen and a grid of buttons for digits 0–9, decimal point, arithmetic operators (+, −, ×, ÷), equals, clear (C), and sign toggle (+/−) and percentage (%) if applicable. Handle edge cases such as division by zero gracefully.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-7"
+          "msg-4"
         ],
         "quotes": [
-          "Its not working"
+          "Create a calulator app"
         ]
       },
       "acceptanceCriteria": [
-        "On Chrome for Android, the install banner appears after the page loads and the beforeinstallprompt event fires.",
-        "Tapping the install banner triggers the native browser install prompt.",
-        "After accepting or dismissing the install prompt, the banner is hidden and does not reappear.",
-        "The service worker registers without console errors and caches the root URL on install.",
-        "The manifest.json includes valid 192×192 and 512×512 icon entries, a start_url, and display: standalone.",
-        "Chrome DevTools Application panel shows no installability errors or warnings.",
-        "On iOS Safari, a banner with Share > Add to Home Screen instructions is shown instead of the native prompt."
-      ]
-    },
-    {
-      "id": "REQ-9",
-      "text": "Ensure the `beforeinstallprompt` event listener is registered as early as possible — ideally in a `<script>` tag inside `index.html` before the React bundle loads — so the event is not missed due to React hydration timing. Store the deferred prompt on `window` (e.g., `window.__installPrompt`) and have `useInstallPrompt` read from it on mount.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-7"
-        ],
-        "quotes": [
-          "Its not working"
-        ]
-      },
-      "acceptanceCriteria": [
-        "The beforeinstallprompt event is captured even on fast-loading devices before React finishes mounting.",
-        "The useInstallPrompt hook correctly reads the deferred prompt from window.__installPrompt on mount.",
-        "The install banner renders on first load when the browser fires beforeinstallprompt."
+        "A Calculator page is accessible from the app navigation (tab or sidebar entry alongside Disease Directory and Find Pharmacy).",
+        "The calculator displays a numeric screen that shows the current input and computed result.",
+        "Buttons for digits 0–9, decimal point, +, −, ×, ÷, =, and C are all present and functional.",
+        "Chained arithmetic operations produce correct results (e.g., 3 + 5 × 2 follows standard calculator left-to-right evaluation).",
+        "Dividing by zero shows a clear error message (e.g., 'Error') instead of crashing.",
+        "The calculator UI matches the existing soft green medical theme (white/green palette, card-based layout, sans-serif typography).",
+        "The calculator is responsive and usable on both desktop and mobile screen sizes."
       ]
     }
   ],
   "constraints": [
-    "Do not modify files listed in frontend.immutablePaths (useInternetIdentity.ts, useActor.ts, main.tsx, src/components/ui).",
-    "Do not alter the backend Motoko actor.",
-    "Preserve all existing PWA manifest fields (app name 'MediFind', green theme color, standalone display mode)."
+    "Calculator logic must be frontend-only; no backend changes are required.",
+    "Navigation must be extended to include the Calculator page without breaking existing Disease Directory and Pharmacy Finder navigation.",
+    "Do not modify files listed in frontend.immutablePaths."
   ],
   "nonGoals": [
-    "Adding new diseases or medicines to the backend.",
-    "Changing the visual theme or layout of the app.",
-    "Implementing push notifications or background sync in the service worker.",
-    "Supporting any browser other than Chrome/Edge (Android) and Safari (iOS) for installation."
+    "Scientific or advanced calculator functions (sin, cos, log, etc.) unless explicitly requested.",
+    "Storing or persisting calculation history in the backend.",
+    "Changes to the existing Disease Directory or Pharmacy Finder features."
   ],
   "imageRequirements": {
     "required": [],

@@ -1,56 +1,40 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Fix PWA 'Add to Home Screen' install prompt not working",
+  "title": "Add Calculator App to MediFind",
   "requirements": [
     {
-      "id": "REQ-8",
-      "summary": "Audit and fix the PWA 'Add to Home Screen' install prompt flow, ensuring the beforeinstallprompt event is captured reliably, the manifest meets Chrome installability criteria, and the service worker registers without errors",
+      "id": "REQ-10",
+      "summary": "Add a fully functional calculator page with standard arithmetic operations, proper error handling, and responsive design matching the medical green theme",
       "acceptanceCriteria": [
-        "On Chrome for Android, the install banner appears after the page loads and the beforeinstallprompt event fires.",
-        "Tapping the install banner triggers the native browser install prompt.",
-        "After accepting or dismissing the install prompt, the banner is hidden and does not reappear.",
-        "The service worker registers without console errors and caches the root URL on install.",
-        "The manifest.json includes valid 192×192 and 512×512 icon entries, a start_url, and display: standalone.",
-        "Chrome DevTools Application panel shows no installability errors or warnings.",
-        "On iOS Safari, a banner with Share > Add to Home Screen instructions is shown instead of the native prompt."
+        "A Calculator page is accessible from the app navigation (tab or sidebar entry alongside Disease Directory and Find Pharmacy).",
+        "The calculator displays a numeric screen that shows the current input and computed result.",
+        "Buttons for digits 0–9, decimal point, +, −, ×, ÷, =, and C are all present and functional.",
+        "Chained arithmetic operations produce correct results (e.g., 3 + 5 × 2 follows standard calculator left-to-right evaluation).",
+        "Dividing by zero shows a clear error message (e.g., 'Error') instead of crashing.",
+        "The calculator UI matches the existing soft green medical theme (white/green palette, card-based layout, sans-serif typography).",
+        "The calculator is responsive and usable on both desktop and mobile screen sizes."
       ],
       "file_operations": [
         {
-          "path": "frontend/public/manifest.json",
-          "operation": "modify",
-          "description": "Update the manifest to include valid icon entries referencing frontend/public/assets/generated/medifind-icon.dim_192x192.png and frontend/public/assets/generated/medifind-icon.dim_512x512.png. Verify that start_url is set correctly (typically '/'), display is 'standalone', name is 'MediFind', and theme_color remains green. Ensure all required PWA installability criteria are met per Chrome standards."
+          "path": "frontend/src/pages/Calculator.tsx",
+          "operation": "create",
+          "description": "Create a Calculator page component featuring a display screen showing current input and results, a button grid for digits 0-9, decimal point, arithmetic operators (+, −, ×, ÷), equals (=), clear (C), sign toggle (+/−), and percentage (%). Implement left-to-right evaluation for chained operations, handle division by zero gracefully with an 'Error' message, and style using the existing medical green theme with card-based layout and responsive grid. The component should manage calculator state (current value, previous value, operator, display) using React hooks."
         },
         {
-          "path": "frontend/public/sw.js",
-          "operation": "modify",
-          "description": "Review and fix the service worker to ensure it registers successfully without console errors. Verify the install event caches the root URL and other critical assets. Confirm the activate event properly purges old caches. Ensure the fetch event uses a network-first strategy with cache fallback for GET navigation requests. Add error handling to prevent activation failures that could block the beforeinstallprompt event."
+          "path": "frontend/src/hooks/useCalculator.ts",
+          "operation": "create",
+          "description": "Create a custom hook encapsulating calculator logic and state management. The hook should manage display value, stored value, current operator, and waiting-for-operand flag. Implement functions for digit input, operator selection, equals calculation, clear, decimal point, sign toggle, and percentage. Handle edge cases including division by zero (return 'Error'), consecutive operator presses, and decimal point validation. Return state and handler functions for use in the Calculator page component."
         },
         {
-          "path": "frontend/src/hooks/useInstallPrompt.ts",
+          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Update the useInstallPrompt hook to read the deferred prompt from window.__installPrompt (set by the early listener in index.html). Ensure the hook correctly detects iOS vs other browsers, manages dismissal state in localStorage, and exposes install/dismiss callbacks. Verify the hook does not re-register the beforeinstallprompt listener (as it will be captured earlier in index.html)."
+          "description": "Add 'calculator' as a new page option in the navigation state type and page state management. Update the conditional rendering to include the Calculator page when page === 'calculator'. Ensure smooth scroll-to-top behavior is maintained when navigating to the calculator."
         },
         {
-          "path": "frontend/src/components/InstallPrompt.tsx",
+          "path": "frontend/src/components/Layout.tsx",
           "operation": "modify",
-          "description": "Verify the InstallPrompt component correctly consumes the useInstallPrompt hook and renders the install banner when a deferred prompt is available. Ensure the iOS flow shows manual Share > Add to Home Screen instructions, and the Android/Chrome flow triggers the native install prompt. Confirm the banner hides after the user accepts or dismisses the prompt, and does not reappear until dismissal expires or the prompt fires again."
-        }
-      ]
-    },
-    {
-      "id": "REQ-9",
-      "summary": "Ensure the beforeinstallprompt event listener is registered as early as possible in index.html before React loads, storing the deferred prompt on window.__installPrompt for the useInstallPrompt hook to consume",
-      "acceptanceCriteria": [
-        "The beforeinstallprompt event is captured even on fast-loading devices before React finishes mounting.",
-        "The useInstallPrompt hook correctly reads the deferred prompt from window.__installPrompt on mount.",
-        "The install banner renders on first load when the browser fires beforeinstallprompt."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/index.html",
-          "operation": "modify",
-          "description": "Add a new inline <script> tag in the <head> section (before the React bundle script) that registers a beforeinstallprompt event listener on the window. Store the deferred prompt event object in window.__installPrompt so the useInstallPrompt hook can access it after React mounts. Ensure this script runs synchronously and does not block page rendering. Verify the existing service worker registration script remains in place and does not interfere with the new listener."
+          "description": "Add a third navigation item for 'Calculator' alongside 'Disease Directory' and 'Find Pharmacy' in both desktop and mobile navigation menus. Use an appropriate icon (e.g., Calculator or Grid icon from lucide-react) and ensure the navigation item is highlighted when active. Maintain consistent styling with existing navigation items and preserve responsive behavior."
         }
       ]
     }

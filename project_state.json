@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 7,
-  "summary": "A health app that lists diseases and their associated medicines, with GPS functionality to show the nearest pharmacy to the user.",
+  "projectStateVersion": 9,
+  "summary": "A health app (MediFind) that lists diseases and their associated medicines, with GPS functionality to show the nearest pharmacy to the user. The user has also requested a calculator app.",
   "architectural_notes": [
     "Uses device GPS/geolocation API to find and display nearest pharmacies",
     "Disease-medicine database must be comprehensive and searchable",
@@ -10,7 +10,7 @@
   "known_issues": [
     "'Add to Home Screen' PWA install prompt reported as not working by user"
   ],
-  "isFixRequest": true,
+  "isFixRequest": false,
   "existing_features": [
     {
       "id": "feature-build-a-disease-directory-page-that-lists-all-diseases-fetched-from-the-backend-each-disease-entry-is-clickable-and-expands-or-navigates-to-a-detail-view-showing-the-disease-description-and-its-associated-medicines",
@@ -75,6 +75,14 @@
         "REQ-9"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-add-a-calculator-page-to-the-frontend-with-a-fully-functional-standard-calculator-supporting-addition-subtraction-multiplication-and-division-the-calculator-should-display-a-multi-digit-input-result-screen-and-a-grid-of-buttons-for-digits-0-9-decimal-point-arithmetic-operators-equals-clear-c-and-sign-toggle-and-percentage-if-applicable-handle-edge-cases-such-as-division-by-zero-gracefully",
+      "title": "Add a Calculator page to the frontend with a fully functional standard calculator supporting addition, subtraction, multiplication, and division. The calculator should display a multi-digit input/result screen and a grid of buttons for digits 0–9, decimal point, arithmetic operators (+, −, ×, ÷), equals, clear (C), and sign toggle (+/−) and percentage (%) if applicable. Handle edge cases such as division by zero gracefully.",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -101,6 +109,12 @@
     {
       "id": "AR-4",
       "summary": "Add an 'Add to Home Screen' button/prompt so users can install the web app on their phone like a native app",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Create a calculator app",
       "reqIds": [],
       "status": "pending"
     }

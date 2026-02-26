@@ -1,14 +1,13 @@
 # Specification
 
 ## Summary
-**Goal:** Fix the PWA "Add to Home Screen" install prompt so it reliably appears and works on Chrome for Android and iOS Safari.
+**Goal:** Add a fully functional standard calculator page to the MediFind frontend.
 
 **Planned changes:**
-- Attach the `beforeinstallprompt` event listener in a `<script>` tag inside `index.html` (before the React bundle loads) and store the deferred prompt on `window.__installPrompt` to avoid missing the event due to React hydration timing.
-- Update the `useInstallPrompt` hook to read from `window.__installPrompt` on mount.
-- Verify and fix `manifest.json` to include valid 192×192 and 512×512 PNG icons, a `start_url`, and `display: standalone`.
-- Ensure the service worker (`sw.js`) registers without errors and caches the root URL on install, resolving any race conditions with the `beforeinstallprompt` event.
-- Show an iOS Safari fallback banner with "Share → Add to Home Screen" instructions instead of the native prompt.
-- Hide the install banner after the prompt is accepted or dismissed so it does not reappear.
+- Add a Calculator page with a numeric display screen and button grid (digits 0–9, decimal, +, −, ×, ÷, =, C, +/−, %)
+- Handle division by zero gracefully by showing an "Error" message
+- Extend the app navigation (tab/sidebar) to include the Calculator page alongside existing Disease Directory and Find Pharmacy entries
+- Style the calculator to match the existing soft green medical theme (white/green palette, card-based layout)
+- Ensure the calculator is responsive on desktop and mobile
 
-**User-visible outcome:** On Chrome for Android, the install banner appears after page load and tapping it triggers the native install prompt. On iOS Safari, a manual instruction banner is shown. The banner is hidden after interaction and Chrome DevTools shows no installability errors.
+**User-visible outcome:** Users can navigate to a Calculator page from the app's main navigation and perform standard arithmetic operations within the familiar MediFind interface.

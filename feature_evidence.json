@@ -2,12 +2,13 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-audit-and-fix-the-pwa-add-to-home-screen-install-prompt-flow-ensure-the-beforeinstallprompt-event-is-captured-reliably-before-react-renders-attach-the-listener-in-index-html-or-early-in-main-tsx-stored-and-passed-to-the-useinstallprompt-hook-verify-the-manifest-json-meets-all-chrome-installability-criteria-start-url-display-standalone-icons-with-at-least-one-192-192-and-one-512-512-png-confirm-the-service-worker-sw-js-is-registered-successfully-and-does-not-throw-errors-on-activation-fix-any-race-conditions-between-service-worker-registration-and-the-beforeinstallprompt-event-that-may-prevent-the-banner-from-appearing",
-      "featureTitle": "Audit and fix the PWA 'Add to Home Screen' install prompt flow. Ensure the `beforeinstallprompt` event is captured reliably before React renders (attach the listener in `index.html` or early in `main.tsx`), stored, and passed to the `useInstallPrompt` hook. Verify the manifest.json meets all Chrome installability criteria (start_url, display: standalone, icons with at least one 192×192 and one 512×512 PNG). Confirm the service worker (sw.js) is registered successfully and does not throw errors on activation. Fix any race conditions between service worker registration and the `beforeinstallprompt` event that may prevent the banner from appearing.",
+      "featureId": "feature-add-a-calculator-page-to-the-frontend-with-a-fully-functional-standard-calculator-supporting-addition-subtraction-multiplication-and-division-the-calculator-should-display-a-multi-digit-input-result-screen-and-a-grid-of-buttons-for-digits-0-9-decimal-point-arithmetic-operators-equals-clear-c-and-sign-toggle-and-percentage-if-applicable-handle-edge-cases-such-as-division-by-zero-gracefully",
+      "featureTitle": "Add a Calculator page to the frontend with a fully functional standard calculator supporting addition, subtraction, multiplication, and division. The calculator should display a multi-digit input/result screen and a grid of buttons for digits 0–9, decimal point, arithmetic operators (+, −, ×, ÷), equals, clear (C), and sign toggle (+/−) and percentage (%) if applicable. Handle edge cases such as division by zero gracefully.",
       "files": [
-        "frontend/public/manifest.json",
-        "frontend/public/sw.js",
-        "frontend/src/hooks/useInstallPrompt.ts"
+        "frontend/src/App.tsx",
+        "frontend/src/components/Layout.tsx",
+        "frontend/src/hooks/useCalculator.ts",
+        "frontend/src/pages/Calculator.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -17,25 +18,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-8"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-ensure-the-beforeinstallprompt-event-listener-is-registered-as-early-as-possible-ideally-in-a-script-tag-inside-index-html-before-the-react-bundle-loads-so-the-event-is-not-missed-due-to-react-hydration-timing-store-the-deferred-prompt-on-window-e-g-window-installprompt-and-have-useinstallprompt-read-from-it-on-mount",
-      "featureTitle": "Ensure the `beforeinstallprompt` event listener is registered as early as possible — ideally in a `<script>` tag inside `index.html` before the React bundle loads — so the event is not missed due to React hydration timing. Store the deferred prompt on `window` (e.g., `window.__installPrompt`) and have `useInstallPrompt` read from it on mount.",
-      "files": [
-        "frontend/index.html"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-9"
+        "REQ-10"
       ],
       "confidence": "high"
     }
