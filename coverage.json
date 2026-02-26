@@ -1,57 +1,39 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-26T14:43:29.110Z",
+  "generatedAt": "2026-02-26T14:50:29.113Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 3,
-    "implemented": 3,
+    "total": 2,
+    "implemented": 2,
     "items": [
       {
-        "id": "REQ-5",
-        "summary": "Add a Web App Manifest file (manifest.json) in the frontend/public directory with the app name 'MediFind', short name, theme color matching the existing soft green palette, background color, display mode set to 'standalone', and appropriate icon references so the browser recognizes the app as installable.",
+        "id": "REQ-8",
+        "summary": "Audit and fix the PWA 'Add to Home Screen' install prompt flow. Ensure the `beforeinstallprompt` event is captured reliably before React renders (attach the listener in `index.html` or early in `main.tsx`), stored, and passed to the `useInstallPrompt` hook. Verify the manifest.json meets all Chrome installability criteria (start_url, display: standalone, icons with at least one 192×192 and one 512×512 PNG). Confirm the service worker (sw.js) is registered successfully and does not throw errors on activation. Fix any race conditions between service worker registration and the `beforeinstallprompt` event that may prevent the banner from appearing.",
         "status": "implemented",
         "plannedFiles": [
           "frontend/public/manifest.json",
-          "frontend/public/assets/generated/medifind-icon.dim_192x192.png",
-          "frontend/public/assets/generated/medifind-icon.dim_512x512.png",
-          "frontend/index.html"
+          "frontend/public/sw.js",
+          "frontend/src/hooks/useInstallPrompt.ts",
+          "frontend/src/components/InstallPrompt.tsx"
         ],
         "matchedFiles": [
           "frontend/public/manifest.json",
-          "frontend/public/assets/generated/medifind-icon.dim_192x192.png",
-          "frontend/public/assets/generated/medifind-icon.dim_512x512.png",
-          "frontend/index.html"
+          "frontend/public/sw.js",
+          "frontend/src/hooks/useInstallPrompt.ts"
         ]
       },
       {
-        "id": "REQ-6",
-        "summary": "Add a visible 'Add to Home Screen' button in the app UI (e.g., in the Layout header or as a dismissible banner below the header) that appears only when the browser fires the 'beforeinstallprompt' event. When clicked, it should trigger the native browser install prompt. Once the user accepts or dismisses, hide the button. On iOS Safari (where beforeinstallprompt is not available), show a small instructional tooltip or banner explaining how to use the Share > Add to Home Screen option.",
+        "id": "REQ-9",
+        "summary": "Ensure the `beforeinstallprompt` event listener is registered as early as possible — ideally in a `<script>` tag inside `index.html` before the React bundle loads — so the event is not missed due to React hydration timing. Store the deferred prompt on `window` (e.g., `window.__installPrompt`) and have `useInstallPrompt` read from it on mount.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/hooks/useInstallPrompt.ts",
-          "frontend/src/components/InstallPrompt.tsx",
-          "frontend/src/components/Layout.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/hooks/useInstallPrompt.ts",
-          "frontend/src/components/InstallPrompt.tsx",
-          "frontend/src/components/Layout.tsx"
-        ]
-      },
-      {
-        "id": "REQ-7",
-        "summary": "Register a minimal service worker (sw.js) in frontend/public that caches the app shell on install so the PWA passes basic installability requirements in modern browsers (Chrome, Edge). The service worker should at minimum handle the install event and cache the root URL.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/public/sw.js",
           "frontend/index.html"
         ],
         "matchedFiles": [
-          "frontend/public/sw.js",
           "frontend/index.html"
         ]
       }
@@ -59,17 +41,12 @@
   },
   "changedFiles": [
     "build-request.json",
-    "build-template/README.md",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
     "frontend/index.html",
-    "frontend/public/assets/generated/medifind-icon.dim_192x192.png",
-    "frontend/public/assets/generated/medifind-icon.dim_512x512.png",
     "frontend/public/manifest.json",
     "frontend/public/sw.js",
-    "frontend/src/components/InstallPrompt.tsx",
-    "frontend/src/components/Layout.tsx",
     "frontend/src/hooks/useInstallPrompt.ts",
     "project_state.json",
     "scratch/component-selection.json",

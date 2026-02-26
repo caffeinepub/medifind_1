@@ -1,13 +1,14 @@
-const CACHE_NAME = 'medifind-v1';
+const CACHE_NAME = 'medifind-v2';
 const URLS_TO_CACHE = ['/'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(URLS_TO_CACHE).catch(() => {});
-    })
+      return cache.addAll(URLS_TO_CACHE).catch(() => {
+        // Silently ignore caching errors so install always succeeds
+      });
+    }).then(() => self.skipWaiting())
   );
-  self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
@@ -18,9 +19,8 @@ self.addEventListener('activate', (event) => {
           .filter((name) => name !== CACHE_NAME)
           .map((name) => caches.delete(name))
       );
-    })
+    }).then(() => self.clients.claim())
   );
-  self.clients.claim();
 });
 
 self.addEventListener('fetch', (event) => {

@@ -5,6 +5,12 @@ interface BeforeInstallPromptEvent extends Event {
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
 }
 
+declare global {
+  interface Window {
+    __installPrompt: BeforeInstallPromptEvent | null;
+  }
+}
+
 interface UseInstallPromptReturn {
   canInstall: boolean;
   isIOS: boolean;
@@ -15,13 +21,19 @@ interface UseInstallPromptReturn {
 }
 
 export function useInstallPrompt(): UseInstallPromptReturn {
-  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(
+    // Read the prompt that was captured before React mounted
+    () => window.__installPrompt ?? null
+  );
   const [isInstalled, setIsInstalled] = useState(false);
   const [isDismissed, setIsDismissed] = useState(() => {
     return localStorage.getItem('medifind-install-dismissed') === 'true';
   });
 
-  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) && !(window as Window & { MSStream?: unknown }).MSStream;
+  const isIOS =
+    /iphone|ipad|ipod/i.test(navigator.userAgent) &&
+    !(window as Window & { MSStream?: unknown }).MSStream;
+
   const isInStandaloneMode =
     window.matchMedia('(display-mode: standalone)').matches ||
     (navigator as Navigator & { standalone?: boolean }).standalone === true;
@@ -32,20 +44,40 @@ export function useInstallPrompt(): UseInstallPromptReturn {
       return;
     }
 
-    const handler = (e: Event) => {
+    // If the prompt was already captured before React mounted, use it
+    if (window.__installPrompt) {
+      setDeferredPrompt(window.__installPrompt);
+    }
+
+    // Listen for the custom event dispatched by the early index.html listener
+    // (fires if beforeinstallprompt happens after React mounts)
+    const onPromptReady = () => {
+      if (window.__installPrompt) {
+        setDeferredPrompt(window.__installPrompt);
+      }
+    };
+
+    // Also listen directly in case the event fires after React mounts
+    const onBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
+      window.__installPrompt = e as BeforeInstallPromptEvent;
       setDeferredPrompt(e as BeforeInstallPromptEvent);
     };
 
-    window.addEventListener('beforeinstallprompt', handler);
+    window.addEventListener('installpromptready', onPromptReady);
+    window.addEventListener('beforeinstallprompt', onBeforeInstallPrompt);
 
-    window.addEventListener('appinstalled', () => {
+    const onAppInstalled = () => {
       setIsInstalled(true);
       setDeferredPrompt(null);
-    });
+      window.__installPrompt = null;
+    };
+    window.addEventListener('appinstalled', onAppInstalled);
 
     return () => {
-      window.removeEventListener('beforeinstallprompt', handler);
+      window.removeEventListener('installpromptready', onPromptReady);
+      window.removeEventListener('beforeinstallprompt', onBeforeInstallPrompt);
+      window.removeEventListener('appinstalled', onAppInstalled);
     };
   }, [isInStandaloneMode]);
 
@@ -57,6 +89,7 @@ export function useInstallPrompt(): UseInstallPromptReturn {
       setIsInstalled(true);
     }
     setDeferredPrompt(null);
+    window.__installPrompt = null;
   };
 
   const dismiss = () => {

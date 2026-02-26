@@ -12,9 +12,9 @@
   "frontend/src/pages/DiseaseDirectory.tsx": "Full disease directory page with search filtering, auto-initialization, loading skeletons, and a sticky detail panel for selected diseases.",
   "frontend/src/pages/PharmacyFinder.tsx": "Pharmacy finder page with hero banner, GPS location button, sorted pharmacy results using Haversine distances, and an informative empty state.",
   "frontend/src/App.tsx": "Root app component managing page state between Disease Directory and Pharmacy Finder, wrapped in the Layout shell.",
-  "frontend/index.html": "HTML entry point with manifest link, theme-color meta tag, Apple PWA meta tags, and inline service worker registration script.",
-  "frontend/public/manifest.json": "Web App Manifest for MediFind PWA with name, icons, theme color, standalone display mode, and start URL.",
-  "frontend/public/sw.js": "Minimal service worker that caches the app shell on install, cleans old caches on activate, and uses a network-first with cache fallback fetch strategy.",
-  "frontend/src/hooks/useInstallPrompt.ts": "Custom React hook that captures the beforeinstallprompt event, detects iOS Safari, tracks install/dismissed state with localStorage persistence, and exposes promptInstall and dismiss functions.",
-  "frontend/src/components/InstallPrompt.tsx": "Dismissible banner component that shows a native install button on supported browsers or step-by-step iOS Share instructions, using the app's soft green theme."
+  "frontend/index.html": "HTML entry point that captures `beforeinstallprompt` in an early inline script (storing it on `window.__installPrompt` and dispatching `installpromptready`) before React loads, plus the service worker registration.",
+  "frontend/public/manifest.json": "Web App Manifest for MediFind with corrected icon entries — each icon now has a separate entry for `\"purpose\": \"any\"` and `\"purpose\": \"maskable\"` as required by Chrome's installability criteria.",
+  "frontend/public/sw.js": "Service worker bumped to cache version `medifind-v2` with corrected promise chaining in install/activate events to ensure `skipWaiting` and `clients.claim` run after async operations complete.",
+  "frontend/src/hooks/useInstallPrompt.ts": "Updated hook that reads `window.__installPrompt` synchronously on mount (catching prompts fired before React loaded), listens for the custom `installpromptready` event, and keeps a direct `beforeinstallprompt` listener as a fallback.",
+  "frontend/src/components/InstallPrompt.tsx": "Dismissible install banner (unchanged logic) that shows native install button on Android/Chrome or step-by-step iOS Share instructions, consuming the updated `useInstallPrompt` hook."
 }

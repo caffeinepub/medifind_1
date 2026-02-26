@@ -1,15 +1,16 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 5,
+  "projectStateVersion": 7,
   "summary": "A health app that lists diseases and their associated medicines, with GPS functionality to show the nearest pharmacy to the user.",
   "architectural_notes": [
     "Uses device GPS/geolocation API to find and display nearest pharmacies",
     "Disease-medicine database must be comprehensive and searchable",
     "PWA 'Add to Home Screen' prompt implemented using the beforeinstallprompt event for Android/Chrome support"
   ],
-  "known_issues": [],
-  "isFixRequest": false,
-  "imageRequirements": "## Required Images\n- App icon for PWA manifest, flat soft green medical cross or leaf on white background (medifind-icon.dim_192x192.png)\n- App icon for PWA manifest large size, flat soft green medical cross or leaf on white background (medifind-icon.dim_512x512.png)",
+  "known_issues": [
+    "'Add to Home Screen' PWA install prompt reported as not working by user"
+  ],
+  "isFixRequest": true,
   "existing_features": [
     {
       "id": "feature-build-a-disease-directory-page-that-lists-all-diseases-fetched-from-the-backend-each-disease-entry-is-clickable-and-expands-or-navigates-to-a-detail-view-showing-the-disease-description-and-its-associated-medicines",
@@ -56,6 +57,22 @@
       "title": "Register a minimal service worker (sw.js) in frontend/public that caches the app shell on install so the PWA passes basic installability requirements in modern browsers (Chrome, Edge). The service worker should at minimum handle the install event and cache the root URL.",
       "reqIds": [
         "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-audit-and-fix-the-pwa-add-to-home-screen-install-prompt-flow-ensure-the-beforeinstallprompt-event-is-captured-reliably-before-react-renders-attach-the-listener-in-index-html-or-early-in-main-tsx-stored-and-passed-to-the-useinstallprompt-hook-verify-the-manifest-json-meets-all-chrome-installability-criteria-start-url-display-standalone-icons-with-at-least-one-192-192-and-one-512-512-png-confirm-the-service-worker-sw-js-is-registered-successfully-and-does-not-throw-errors-on-activation-fix-any-race-conditions-between-service-worker-registration-and-the-beforeinstallprompt-event-that-may-prevent-the-banner-from-appearing",
+      "title": "Audit and fix the PWA 'Add to Home Screen' install prompt flow. Ensure the `beforeinstallprompt` event is captured reliably before React renders (attach the listener in `index.html` or early in `main.tsx`), stored, and passed to the `useInstallPrompt` hook. Verify the manifest.json meets all Chrome installability criteria (start_url, display: standalone, icons with at least one 192×192 and one 512×512 PNG). Confirm the service worker (sw.js) is registered successfully and does not throw errors on activation. Fix any race conditions between service worker registration and the `beforeinstallprompt` event that may prevent the banner from appearing.",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-the-beforeinstallprompt-event-listener-is-registered-as-early-as-possible-ideally-in-a-script-tag-inside-index-html-before-the-react-bundle-loads-so-the-event-is-not-missed-due-to-react-hydration-timing-store-the-deferred-prompt-on-window-e-g-window-installprompt-and-have-useinstallprompt-read-from-it-on-mount",
+      "title": "Ensure the `beforeinstallprompt` event listener is registered as early as possible — ideally in a `<script>` tag inside `index.html` before the React bundle loads — so the event is not missed due to React hydration timing. Store the deferred prompt on `window` (e.g., `window.__installPrompt`) and have `useInstallPrompt` read from it on mount.",
+      "reqIds": [
+        "REQ-9"
       ],
       "version": 1
     }

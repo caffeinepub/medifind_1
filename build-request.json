@@ -1,82 +1,63 @@
 {
   "kind": "build_request",
-  "title": "Add 'Add to Home Screen' button for PWA installation",
+  "title": "Fix PWA 'Add to Home Screen' install prompt not working",
   "projectName": "MediFind",
-  "priority": "normal",
+  "priority": "high",
   "requirements": [
     {
-      "id": "REQ-5",
-      "text": "Add a Web App Manifest file (manifest.json) in the frontend/public directory with the app name 'MediFind', short name, theme color matching the existing soft green palette, background color, display mode set to 'standalone', and appropriate icon references so the browser recognizes the app as installable.",
+      "id": "REQ-8",
+      "text": "Audit and fix the PWA 'Add to Home Screen' install prompt flow. Ensure the `beforeinstallprompt` event is captured reliably before React renders (attach the listener in `index.html` or early in `main.tsx`), stored, and passed to the `useInstallPrompt` hook. Verify the manifest.json meets all Chrome installability criteria (start_url, display: standalone, icons with at least one 192×192 and one 512×512 PNG). Confirm the service worker (sw.js) is registered successfully and does not throw errors on activation. Fix any race conditions between service worker registration and the `beforeinstallprompt` event that may prevent the banner from appearing.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-latest"
+          "msg-7"
         ],
         "quotes": [
-          "Put add to home screen button"
+          "Its not working"
         ]
       },
       "acceptanceCriteria": [
-        "A manifest.json file exists in frontend/public with name, short_name, theme_color, background_color, display: standalone, and icons fields",
-        "The manifest is linked in frontend/index.html via a <link rel=\"manifest\"> tag",
-        "The app theme-color meta tag is set to match the soft green palette"
+        "On Chrome for Android, the install banner appears after the page loads and the beforeinstallprompt event fires.",
+        "Tapping the install banner triggers the native browser install prompt.",
+        "After accepting or dismissing the install prompt, the banner is hidden and does not reappear.",
+        "The service worker registers without console errors and caches the root URL on install.",
+        "The manifest.json includes valid 192×192 and 512×512 icon entries, a start_url, and display: standalone.",
+        "Chrome DevTools Application panel shows no installability errors or warnings.",
+        "On iOS Safari, a banner with Share > Add to Home Screen instructions is shown instead of the native prompt."
       ]
     },
     {
-      "id": "REQ-6",
-      "text": "Add a visible 'Add to Home Screen' button in the app UI (e.g., in the Layout header or as a dismissible banner below the header) that appears only when the browser fires the 'beforeinstallprompt' event. When clicked, it should trigger the native browser install prompt. Once the user accepts or dismisses, hide the button. On iOS Safari (where beforeinstallprompt is not available), show a small instructional tooltip or banner explaining how to use the Share > Add to Home Screen option.",
+      "id": "REQ-9",
+      "text": "Ensure the `beforeinstallprompt` event listener is registered as early as possible — ideally in a `<script>` tag inside `index.html` before the React bundle loads — so the event is not missed due to React hydration timing. Store the deferred prompt on `window` (e.g., `window.__installPrompt`) and have `useInstallPrompt` read from it on mount.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-latest"
+          "msg-7"
         ],
         "quotes": [
-          "Put add to home screen button"
+          "Its not working"
         ]
       },
       "acceptanceCriteria": [
-        "An 'Add to Home Screen' button or banner is rendered in the UI when the browser supports the install prompt",
-        "Clicking the button triggers the native browser PWA install prompt",
-        "The button/banner is hidden after the prompt is accepted or dismissed",
-        "On iOS Safari, a fallback instructional message is shown instead (e.g., 'Tap the Share icon then Add to Home Screen')",
-        "The button/banner uses the existing soft green color palette and matches the app's visual theme"
-      ]
-    },
-    {
-      "id": "REQ-7",
-      "text": "Register a minimal service worker (sw.js) in frontend/public that caches the app shell on install so the PWA passes basic installability requirements in modern browsers (Chrome, Edge). The service worker should at minimum handle the install event and cache the root URL.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-latest"
-        ],
-        "quotes": [
-          "Put add to home screen button"
-        ]
-      },
-      "acceptanceCriteria": [
-        "A sw.js service worker file exists in frontend/public",
-        "The service worker is registered in frontend/src/main.tsx or frontend/index.html",
-        "The app passes Chrome's PWA installability criteria (manifest + service worker)",
-        "The service worker does not break existing app functionality"
+        "The beforeinstallprompt event is captured even on fast-loading devices before React finishes mounting.",
+        "The useInstallPrompt hook correctly reads the deferred prompt from window.__installPrompt on mount.",
+        "The install banner renders on first load when the browser fires beforeinstallprompt."
       ]
     }
   ],
   "constraints": [
-    "Do not modify frontend/src/main.tsx beyond adding service worker registration if strictly necessary — prefer registering in index.html or a separate init file",
-    "Do not change backend logic or data models",
-    "The Add to Home Screen UI must match the existing soft green and white color palette"
+    "Do not modify files listed in frontend.immutablePaths (useInternetIdentity.ts, useActor.ts, main.tsx, src/components/ui).",
+    "Do not alter the backend Motoko actor.",
+    "Preserve all existing PWA manifest fields (app name 'MediFind', green theme color, standalone display mode)."
   ],
   "nonGoals": [
-    "Publishing the app to Google Play Store or Apple App Store",
-    "Full offline support or aggressive caching beyond basic installability",
-    "Push notifications"
+    "Adding new diseases or medicines to the backend.",
+    "Changing the visual theme or layout of the app.",
+    "Implementing push notifications or background sync in the service worker.",
+    "Supporting any browser other than Chrome/Edge (Android) and Safari (iOS) for installation."
   ],
   "imageRequirements": {
-    "required": [
-      "App icon for PWA manifest, flat soft green medical cross or leaf on white background (medifind-icon.dim_192x192.png)",
-      "App icon for PWA manifest large size, flat soft green medical cross or leaf on white background (medifind-icon.dim_512x512.png)"
-    ],
+    "required": [],
     "edits": []
   }
 }

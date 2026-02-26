@@ -10,6 +10,16 @@
         <link rel='apple-touch-icon' href='/assets/generated/medifind-icon.dim_192x192.png' />
         <title>MediFind</title>
         <script>
+          // Capture beforeinstallprompt as early as possible, before React mounts.
+          // React's useEffect runs too late and misses this event on fast devices.
+          window.__installPrompt = null;
+          window.addEventListener('beforeinstallprompt', function(e) {
+            e.preventDefault();
+            window.__installPrompt = e;
+            // Notify any already-mounted React listeners
+            window.dispatchEvent(new Event('installpromptready'));
+          });
+
           if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
               navigator.serviceWorker.register('/sw.js').catch(function() {});

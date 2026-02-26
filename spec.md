@@ -1,14 +1,14 @@
 # Specification
 
 ## Summary
-**Goal:** Make MediFind installable as a Progressive Web App (PWA) by adding a web app manifest, a service worker, and an "Add to Home Screen" button in the UI.
+**Goal:** Fix the PWA "Add to Home Screen" install prompt so it reliably appears and works on Chrome for Android and iOS Safari.
 
 **Planned changes:**
-- Add a `manifest.json` to `frontend/public` with app name "MediFind", short name, soft green theme color, standalone display mode, and icon references
-- Link the manifest and set the theme-color meta tag in `frontend/index.html`
-- Add a minimal `sw.js` service worker to `frontend/public` that caches the app shell on install, and register it in the app
-- Add an "Add to Home Screen" button/banner in the app header that appears when the browser fires `beforeinstallprompt`, triggers the native install prompt on click, and hides after interaction
-- On iOS Safari, show a fallback instructional banner explaining how to use Share > Add to Home Screen
-- Style the button/banner using the existing soft green and white color palette
+- Attach the `beforeinstallprompt` event listener in a `<script>` tag inside `index.html` (before the React bundle loads) and store the deferred prompt on `window.__installPrompt` to avoid missing the event due to React hydration timing.
+- Update the `useInstallPrompt` hook to read from `window.__installPrompt` on mount.
+- Verify and fix `manifest.json` to include valid 192×192 and 512×512 PNG icons, a `start_url`, and `display: standalone`.
+- Ensure the service worker (`sw.js`) registers without errors and caches the root URL on install, resolving any race conditions with the `beforeinstallprompt` event.
+- Show an iOS Safari fallback banner with "Share → Add to Home Screen" instructions instead of the native prompt.
+- Hide the install banner after the prompt is accepted or dismissed so it does not reappear.
 
-**User-visible outcome:** Users on supported browsers (Chrome, Edge) see an "Add to Home Screen" button they can click to install MediFind as a standalone app. iOS Safari users see instructions for manual installation.
+**User-visible outcome:** On Chrome for Android, the install banner appears after page load and tapping it triggers the native install prompt. On iOS Safari, a manual instruction banner is shown. The banner is hidden after interaction and Chrome DevTools shows no installability errors.
